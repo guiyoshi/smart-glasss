@@ -14,10 +14,11 @@ const char* password = "yyl6333o";
 const unsigned long timeout = 30000; // 30 seconds
 
 const int buttonPin = 2;    // the number of the pushbutton pin
+const int audio_trigger = 14;
 int buttonState;             
 int lastButtonState = LOW;   
 unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
-unsigned long debounceDelay = 50;    // the debounce time; increase if the output flickers
+unsigned long debounceDelay = 25;    // the debounce time; increase if the output flickers
 bool isNormalMode = true;
 
 void setup() {
@@ -26,6 +27,7 @@ void setup() {
   
   Serial.println();
   pinMode(buttonPin, INPUT);
+  pinMode(audio_trigger, OUTPUT);
   
   Serial.println("INIT CAMERA");
   camera_config_t config;
@@ -97,8 +99,7 @@ void buttonEvent(){
         isNormalMode = !isNormalMode;
         Serial.println("--> Button Click");
 
-        //Additional Code 
-        if(!isNormalMode)
+        //if(!isNormalMode)
           sendingImage();
         //   
       }
@@ -147,7 +148,6 @@ void postingImage(camera_fb_t *fb){
     //Error
     Serial.println("Check Your Server!!!");
   }
-
   client.end();
   WiFi.disconnect();
 }
@@ -172,7 +172,15 @@ void parsingResult(String response){
     yPos += 16;
   }
 Serial.println("--------------------------------");
+audioTrigger();
 }
+
+void audioTrigger(){
+  delay(2000);
+  digitalWrite(audio_trigger, HIGH);
+  delay(200);
+  digitalWrite(audio_trigger, LOW);
+  }
 
 void showingImage(){
   camera_fb_t *fb = capture();
