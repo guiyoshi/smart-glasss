@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^3.3.1",
+    "@google-cloud/translate": "^6.3.1",
+    "@google-cloud/vision": "^2.4.0",
+    "file-system": "^2.2.2"
+  }
+}
