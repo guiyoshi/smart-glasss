@@ -74,7 +74,7 @@ void loop()
 {
  //Serial.println(buttonState);
   if(digitalRead(button) == HIGH){
-  audio.connecttohost("http://34.138.175.221:8080/audio");
+  audio.connecttohost("http://34.148.212.236:8080/audio");
   unsigned long starttime = millis();
   unsigned long endtime = starttime;
   int loopcount;
