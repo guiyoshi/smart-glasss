@@ -118,7 +118,7 @@ server.on('request', (request, response)=>{
 	}
 });
 
-const port = 9000;
+const port = 8080;
 server.listen(port)
 console.log(`--> Servidor atuando na porta ${port}`)
 console.log('')
