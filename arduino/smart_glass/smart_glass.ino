@@ -137,7 +137,7 @@ camera_fb_t* capture(){
 
 void postingImage(camera_fb_t *fb){
   HTTPClient client;
-  client.begin("http://192.168.0.166:9000/imageUpdate");
+  client.begin("http://34.138.175.221:8080/imageUpdate"); 
   client.addHeader("Content-Type", "image/jpeg");
   int httpResponseCode = client.POST(fb->buf, fb->len);
   Serial.println("--> Posting Image");
