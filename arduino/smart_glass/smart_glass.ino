@@ -171,7 +171,7 @@ void parsingResult(String response){
     Serial.println(label);
     yPos += 16;
   }
-Serial.println("--------------------------------");
+
 audioTrigger();
 }
 

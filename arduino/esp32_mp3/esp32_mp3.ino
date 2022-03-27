@@ -5,6 +5,7 @@
 #include "SPI.h"
 #include "SD.h"
 #include "FS.h"
+#include <Ultrasonic.h>
 
 //Pinos de conexão do ESP32 e o módulo de cartão SD
 #define SD_CS          5
@@ -19,6 +20,11 @@
 
 const int button = 34;
 int buttonState = 0;
+
+#define pino_trigger 33
+#define pino_echo 32
+
+Ultrasonic ultrasonic(pino_trigger, pino_echo);
 
 //Cria o objeto que representará o áudio
 Audio audio;
@@ -72,6 +78,7 @@ void setup()
 
 void loop()
 {
+
  //Serial.println(buttonState);
   if(digitalRead(button) == HIGH){
   audio.connecttohost("http://34.148.212.236:8080/audio");
@@ -86,7 +93,7 @@ void loop()
   endtime = millis();
   }
   Serial.print (loopcount,DEC);
- }       
+ }      
 }
 
 // As seguintes funções são opcionais e retornam informações sobre a execução

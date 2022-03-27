@@ -5,6 +5,7 @@ const util = require('util');
 const server = http.createServer();
 const imagePath = './resources/image.jpeg';
 const audioPath = 'resources/labels.mp3';
+const audioPath2 = 'resources/obstaculo.mp3'
 
 //Importando APIs
 const vision = require('@google-cloud/vision');
@@ -108,6 +109,26 @@ server.on('request', (request, response)=>{
         	'Content-Length': stat.size
     });
     var readStream = fs.createReadStream(audioPath);
+    readStream.pipe(response);
+	}
+
+	else if(request.url =='/obstaculo'){
+		var stat = fs.statSync(audioPath2);
+    	response.writeHead(200, {
+        	'Content-Type': 'audio/mp3',
+        	'Content-Length': stat.size
+    });
+    var readStream = fs.createReadStream(audioPath2);
+    readStream.pipe(response);
+	}
+
+	else if(request.url =='/image'){
+		var stat = fs.statSync(imagePath);
+    	response.writeHead(200, {
+        	'Content-Type': 'image/jpeg',
+        	'Content-Length': stat.size
+    });
+    var readStream = fs.createReadStream(imagePath);
     readStream.pipe(response);
 	}
 	
