@@ -5,7 +5,7 @@ const util = require('util');
 const server = http.createServer();
 const imagePath = './resources/image.jpeg';
 const audioPath = 'resources/labels.mp3';
-const audioPath2 = 'resources/obstaculo.mp3'
+global.distance = 'test'
 
 //Importando APIs
 const vision = require('@google-cloud/vision');
@@ -37,7 +37,10 @@ async function visionAPI() {
 	const label_1 = labels[0]['description']
 	const label_2 = labels[1]['description']
 	const label_3 = labels[2]['description']
-	const text = inicio_fala.concat(label_1,',',label_2,',',label_3)
+	const dist_1 = 'Distance: '
+	const dist_2 = distance
+	const dist_3 = ' centimeters'
+	const text = inicio_fala.concat(label_1,',',label_2,',',label_3,'.',dist_1,dist_2,dist_3)
 	console.log('--- Detecção de objetos ---')
 	console.log(`${text}`)
 	console.log('')
@@ -112,14 +115,11 @@ server.on('request', (request, response)=>{
     readStream.pipe(response);
 	}
 
-	else if(request.url =='/obstaculo'){
-		var stat = fs.statSync(audioPath2);
-    	response.writeHead(200, {
-        	'Content-Type': 'audio/mp3',
-        	'Content-Length': stat.size
-    });
-    var readStream = fs.createReadStream(audioPath2);
-    readStream.pipe(response);
+	else if(request.url =='/ultrasonic'){
+		request.on('data', function(data){
+			response.writeHead(200, {'Content-Type' : 'text/plain'});
+			distance = data;
+		});
 	}
 
 	else if(request.url =='/image'){

@@ -5,7 +5,6 @@
 #include "SPI.h"
 #include "SD.h"
 #include "FS.h"
-#include <Ultrasonic.h>
 
 //Pinos de conexão do ESP32 e o módulo de cartão SD
 #define SD_CS          5
@@ -20,11 +19,6 @@
 
 const int button = 34;
 int buttonState = 0;
-
-#define pino_trigger 33
-#define pino_echo 32
-
-Ultrasonic ultrasonic(pino_trigger, pino_echo);
 
 //Cria o objeto que representará o áudio
 Audio audio;
@@ -85,7 +79,7 @@ void loop()
   unsigned long starttime = millis();
   unsigned long endtime = starttime;
   int loopcount;
-  while ((endtime - starttime) <=6000) // do this loop for up to 6000mS
+  while ((endtime - starttime) <=10000) // do this loop for up to 6000mS
   {
   //Executa o loop interno da biblioteca audio
     audio.loop();

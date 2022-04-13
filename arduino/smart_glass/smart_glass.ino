@@ -1,3 +1,4 @@
+#include <Ultrasonic.h>
 #include "esp_camera.h"
 #define CAMERA_MODEL_AI_THINKER
 #include "camera_pins.h"
@@ -6,8 +7,15 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+
 #define GFXFF 1
 #define FSB9 &FreeSerifBold9pt7b
+
+#define pino_trigger 12
+#define pino_echo 13
+
+Ultrasonic ultrasonic(pino_trigger, pino_echo);
+
 
 const char* ssid = "yoshikawa2g";
 const char* password = "yyl6333o";
@@ -21,6 +29,11 @@ unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
 unsigned long debounceDelay = 25;    // the debounce time; increase if the output flickers
 bool isNormalMode = true;
 
+int distance;
+String distance_result;
+
+
+
 void setup() {
   Serial.begin(115200);
   delay(1000);
@@ -28,6 +41,8 @@ void setup() {
   Serial.println();
   pinMode(buttonPin, INPUT);
   pinMode(audio_trigger, OUTPUT);
+  pinMode(pino_echo,INPUT);
+  pinMode(pino_trigger,OUTPUT);
   
   Serial.println("INIT CAMERA");
   camera_config_t config;
@@ -100,6 +115,7 @@ void buttonEvent(){
         Serial.println("--> Button Click");
 
         //if(!isNormalMode)
+          hcsr04();
           sendingImage();
         //   
       }
@@ -193,9 +209,35 @@ void showingImage(){
   }
 }
 
+void hcsr04(){
+    digitalWrite(pino_trigger, LOW); 
+    delayMicroseconds(2); 
+    digitalWrite(pino_trigger, HIGH); 
+    delayMicroseconds(10); 
+    digitalWrite(pino_trigger, LOW); 
+    distance = (ultrasonic.Ranging(CM)); 
+    String distance_result = String(distance); 
+    Serial.print("Distancia "); 
+    Serial.print(distance_result); 
+    Serial.println("cm"); 
+
+    if(wifiConnect()){
+        Serial.println("--> Wifi Connected!");
+        HTTPClient client;
+        client.begin("http://34.148.212.236:8080/ultrasonic"); 
+        client.addHeader("Content-Type", "text/plain");
+        int httpResponseCode = client.POST(distance_result);
+        Serial.println("--> Posting distance");
+        client.end();
+        WiFi.disconnect();
+    }else{
+      Serial.println("Check Wifi credential!");
+    }
+    
+ }
+ 
 void loop() {
   buttonEvent();
-  
   if(isNormalMode)
     showingImage();
   
